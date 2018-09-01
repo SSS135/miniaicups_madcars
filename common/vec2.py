@@ -8,6 +8,10 @@ class Vec2:
         self.x = x
         self.y = y
 
+    @property
+    def magnitude(self):
+        return math.sqrt(self.x * self.x + self.y * self.y)
+
     def __add__(self, other):
         if isinstance(other, Vec2):
             return Vec2(self.x + other.x, self.y + other.y)
@@ -44,6 +48,5 @@ class Vec2:
         else:
             return Vec2(self.x ** power, self.y ** power)
 
-    @property
-    def dist(self):
-        return math.sqrt(self.x * self.x + self.y * self.y)
+    def __iter__(self):
+        return iter((self.x, self.y))

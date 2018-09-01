@@ -1,8 +1,8 @@
 import json
 import random
 import math
-from .strategy import Strategy
-from .types import TickStep, Car
+from ..common.strategy import Strategy
+from ..common.types import TickStep, Car
 
 
 class Bot3Strategy(Strategy):
@@ -34,7 +34,7 @@ class Bot3Strategy(Strategy):
         my_nearest_wheel = self.get_nearest_wheel(data.my_car, data.enemy_car)
         enemy_nearest_wheel = self.get_nearest_wheel(data.enemy_car, data.my_car)
         enemy_wheel_higher = my_nearest_wheel.y < enemy_nearest_wheel.y
-        in_flee_range = (my_nearest_wheel - enemy_nearest_wheel).dist < self.max_flee_dist
+        in_flee_range = (my_nearest_wheel - enemy_nearest_wheel).magnitude < self.max_flee_dist
         if enemy_wheel_higher and in_flee_range:
             cmd = 'right' if diff_x < 0 else 'left'
 

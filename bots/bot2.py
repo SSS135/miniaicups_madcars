@@ -1,8 +1,8 @@
 import json
 import random
 import math
-from .strategy import Strategy
-from .types import TickStep, Car
+from ..common.strategy import Strategy
+from ..common.types import TickStep, Car
 
 
 class Bot2Strategy(Strategy):
@@ -38,5 +38,3 @@ class Bot2Strategy(Strategy):
         self.cur_tick += 1
 
         return {"command": cmd, 'debug': cmd}
-
-

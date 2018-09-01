@@ -122,7 +122,8 @@ class Game(object):
         self.tick_num += 1
 
     def draw(self, draw_options):
-        self.space.debug_draw(draw_options)
+        pass
+        # self.space.debug_draw(draw_options)
 
     def get_players_external_id(self):
         return {p.id: p.get_solution_id() for p in self.all_players}
