@@ -10,15 +10,15 @@ from itertools import product
 
 import pymunkoptions
 
-from mechanic.constants import MAX_TICK_COUNT
+from .constants import MAX_TICK_COUNT
 
 pymunkoptions.options["debug"] = False
 import pymunk
 
-from mechanic.game_objects.cars import Buggy, Bus, SquareWheelsBuggy
-from mechanic.game_objects.maps import PillMap, PillHubbleMap, PillHillMap, PillCarcassMap, IslandMap, IslandHoleMap
-from mechanic.match import Match
-from mechanic.player import Player
+from .game_objects.cars import Buggy, Bus, SquareWheelsBuggy
+from .game_objects.maps import PillMap, PillHubbleMap, PillHillMap, PillCarcassMap, IslandMap, IslandHoleMap
+from .match import Match
+from .player import Player
 
 
 class Game(object):

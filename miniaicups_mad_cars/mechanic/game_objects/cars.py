@@ -1,7 +1,7 @@
 import math
 import pymunk
 
-from mechanic.game_objects.base_car import Car
+from ..game_objects.base_car import Car
 
 
 class Buggy(Car):

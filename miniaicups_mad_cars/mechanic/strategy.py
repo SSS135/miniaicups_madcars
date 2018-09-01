@@ -9,7 +9,7 @@ import pyglet
 import asyncio
 from subprocess import Popen, PIPE
 
-from mechanic.constants import MAX_EXECUTION_TIME, REQUEST_MAX_TIME
+from .constants import MAX_EXECUTION_TIME, REQUEST_MAX_TIME
 
 
 class Client(object):

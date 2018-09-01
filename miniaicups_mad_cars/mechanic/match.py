@@ -4,9 +4,9 @@ from functools import partial
 import os
 from pymunk import Vec2d
 
-from mechanic.constants import TICKS_TO_DEADLINE
-from mechanic.game_objects.base_car import Car
-from mechanic.game_objects.deadline import DeadLine
+from .constants import TICKS_TO_DEADLINE
+from .game_objects.base_car import Car
+from .game_objects.deadline import DeadLine
 
 
 class Match:

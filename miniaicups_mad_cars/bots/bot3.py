@@ -7,7 +7,7 @@ from ..common.types import TickStep, Car
 
 class Bot3Strategy(Strategy):
     move_ticks = 40
-    angle_limit_stop = 40
+    angle_limit = 40
     min_closing_dist = 300
     max_flee_dist = 150
 

@@ -30,11 +30,17 @@ class Vec2:
         else:
             return Vec2(self.x * other, self.y * other)
 
-    def __div__(self, other):
+    def __truediv__(self, other):
         if isinstance(other, Vec2):
             return Vec2(self.x / other.x, self.y / other.y)
         else:
             return Vec2(self.x / other, self.y / other)
+
+    def __floordiv__(self, other):
+        if isinstance(other, Vec2):
+            return Vec2(self.x // other.x, self.y // other.y)
+        else:
+            return Vec2(self.x // other, self.y // other)
 
     def __eq__(self, other):
         if isinstance(other, Vec2):

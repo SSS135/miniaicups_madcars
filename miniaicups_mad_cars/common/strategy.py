@@ -1,7 +1,7 @@
 import json
 
 from .dict_ex import DictEx
-from .types import TickStep, NewMatchStep
+from .types import TickStep, NewMatchStep, Step
 
 
 def parse_step(data):
@@ -23,16 +23,16 @@ class Strategy:
 
     def loop(self):
         while True:
-            data = self.parse_step(json.loads(input()))
+            data = parse_step(json.loads(input()))
             out = self.process_data(data)
             if out is not None:
                 print(json.dumps(out))
 
     def receive_message(self, type, params):
-        data = self.parse_step(dict(type=type, params=params))
+        data = parse_step(dict(type=type, params=params))
         return self.process_data(data)
 
-    def process_data(self, data):
+    def process_data(self, data: Step):
         if isinstance(data, TickStep):
             return self.tick(data)
         if isinstance(data, NewMatchStep):
