@@ -1,10 +1,10 @@
 import json
 
 from .dict_ex import DictEx
-from .types import TickStep, NewMatchStep, Step
+from .types import TickStep, NewMatchStep
 
 
-def parse_step(data) -> Step:
+def parse_step(data) -> TickStep or NewMatchStep:
     data = DictEx(data)
     params = DictEx(data.params)
     type = data.type
@@ -32,7 +32,7 @@ class Strategy:
         data = parse_step(dict(type=type, params=params))
         return self.process_data(data)
 
-    def process_data(self, data: Step) -> dict or None:
+    def process_data(self, data: TickStep or NewMatchStep) -> dict or None:
         if isinstance(data, TickStep):
             return self.tick(data)
         if isinstance(data, NewMatchStep):

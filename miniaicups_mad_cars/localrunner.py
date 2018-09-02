@@ -3,6 +3,7 @@ from itertools import product
 import pyglet
 import pymunk.pyglet_util
 import argparse
+import random
 
 from asyncio import events
 
@@ -28,7 +29,7 @@ parser.add_argument('--spl', type=str, nargs='?', help='Path to log for second p
 maps = ['PillMap', 'PillHubbleMap', 'PillHillMap', 'PillCarcassMap', 'IslandMap', 'IslandHoleMap']
 cars = ['Buggy', 'Bus', 'SquareWheelsBuggy']
 games = [','.join(t) for t in product(maps, cars)]
-
+random.shuffle(games)
 
 parser.add_argument('-m', '--matches', nargs='+', help='List of pairs(map, car) for games', default=games)
 

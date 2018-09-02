@@ -51,18 +51,14 @@ class ProtoCar:
         self.front_wheel_damp_damping = data.front_wheel_damp_damping
 
 
-class Step:
-    pass
-
-
-class TickStep(Step):
+class TickStep:
     def __init__(self, data):
         self.my_car = Car(data.my_car)
         self.enemy_car = Car(data.enemy_car)
         self.deadline_pos = data.deadline_position
 
 
-class NewMatchStep(Step):
+class NewMatchStep:
     def __init__(self, data):
         self.my_lives = data.my_lives
         self.enemy_lives = data.enemy_lives
