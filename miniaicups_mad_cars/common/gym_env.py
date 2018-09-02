@@ -9,9 +9,8 @@ from ..bots.bot0 import Bot0Strategy
 from ..bots.bot1 import Bot1Strategy
 from ..bots.bot2 import Bot2Strategy
 from ..bots.bot3 import Bot3Strategy
-from .inverse_client import DetachedClient, DetachedGame, BotClient
+from .inverse_client import DetachedClient, DetachedGame, BotClient, NoGraphicsGame
 from .types import NewMatchStep
-from ..mechanic.game import Game
 import random
 from .strategy import parse_step
 from .types import Car
@@ -19,7 +18,7 @@ from .vec2 import Vec2
 
 
 class MadCarsAIEnv(gym.Env):
-    state_size = 19
+    state_size = 20 + 3
     stacked_states = 4
     frameskip = 4
     observation_space = gym.spaces.Box(low=-1, high=1, shape=(state_size * stacked_states,), dtype=np.float32)
@@ -50,7 +49,7 @@ class MadCarsAIEnv(gym.Env):
         self.inv_client = DetachedClient()
         self.bots = [BotClient(strategy()), self.inv_client]
         random.shuffle(self.bots)
-        game = Game(self.bots, self.games, extended_save=False)
+        game = NoGraphicsGame(self.bots, self.games, extended_save=False)
         for p in game.all_players:
             p.lives = 1
         self.inv_game = DetachedGame(game)
@@ -90,7 +89,10 @@ class MadCarsAIEnv(gym.Env):
         self.cur_state = np.array(self.states).flatten()
 
     def _get_car_state(self, c: Car):
-        return (*self._norm_pos(c.pos),
+        pos = self._norm_pos(c.pos)
+        return (*pos,
+                math.sin(pos.x * 30),
+                math.cos(pos.y * 30),
                 *self._norm_pos(c.fw_pos),
                 *self._norm_pos(c.bw_pos),
                 math.sin(c.angle),

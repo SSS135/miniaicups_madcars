@@ -1,7 +1,4 @@
 import sys
-sys.path.append(sys.path[0] + "/..")
-
-
 from bots.bot0 import Bot0Strategy
 from bots.bot1 import Bot1Strategy
 from bots.bot2 import Bot2Strategy

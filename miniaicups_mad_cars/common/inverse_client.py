@@ -33,6 +33,11 @@ class BotClient(Client):
         self.command = self.strategy.receive_message(t, d)
 
 
+class NoGraphicsGame(Game):
+    def draw(self, draw_options):
+        pass
+
+
 class DetachedGame:
     def __init__(self, game: Game):
         self.game = game
