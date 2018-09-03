@@ -1,9 +1,10 @@
-from ..mechanic.strategy import Client
-from ..mechanic.game import Game
+import asyncio
+from asyncio import events
 from queue import Queue
 from threading import Thread
-from asyncio import events
-import asyncio
+
+from ..mechanic.game import Game
+from ..mechanic.strategy import Client
 
 
 class DetachedClient(Client):

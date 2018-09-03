@@ -1,14 +1,12 @@
-import json
-import random
-import math
 from functools import partial
 
-from ..common.strategy import Strategy
-from ..common.types import TickStep, NewMatchStep, Car
-from ..common.state_processor import StateProcessor
-from ..common.gym_env import MadCarsAIEnv
-from ppo_pytorch.ppo import PPO_RNN, PPO
 from ppo_pytorch.models import RNNActor, FCActor
+from ppo_pytorch.ppo import PPO_RNN, PPO
+
+from ..common.gym_env import MadCarsAIEnv
+from ..common.state_processor import StateProcessor
+from ..common.strategy import Strategy
+from ..common.types import TickStep, NewMatchStep
 
 
 class NNBotStrategy(Strategy):

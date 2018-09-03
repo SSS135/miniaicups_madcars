@@ -1,7 +1,6 @@
 import asyncio
 from functools import partial
 
-import os
 from pymunk import Vec2d
 
 from .constants import TICKS_TO_DEADLINE

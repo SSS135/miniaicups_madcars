@@ -1,6 +1,6 @@
+import math
 from itertools import chain
 
-import math
 import pymunk
 from pymunk import Vec2d
 

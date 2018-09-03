@@ -1,19 +1,18 @@
-from itertools import product
-import time
 import random
+import time
+from itertools import product
 
-import gym
 import gym.spaces
 import numpy as np
 
-from ..common.state_processor import StateProcessor
+from .inverse_client import DetachedClient, DetachedGame, BotClient, NoGraphicsGame
+from .strategy import parse_step
+from .types import NewMatchStep
 from ..bots.bot0 import Bot0Strategy
 from ..bots.bot1 import Bot1Strategy
 from ..bots.bot2 import Bot2Strategy
 from ..bots.bot3 import Bot3Strategy
-from .inverse_client import DetachedClient, DetachedGame, BotClient, NoGraphicsGame
-from .types import NewMatchStep
-from .strategy import parse_step
+from ..common.state_processor import StateProcessor
 
 
 class MadCarsAIEnv(gym.Env):

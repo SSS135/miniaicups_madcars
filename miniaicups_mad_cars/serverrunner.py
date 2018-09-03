@@ -1,8 +1,8 @@
 import asyncio
 
-from mechanic.strategy import TcpClient
-from mechanic.game import Game
 from mechanic.constants import MATCHES_COUNT
+from mechanic.game import Game
+from mechanic.strategy import TcpClient
 
 
 class GameServer:

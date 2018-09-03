@@ -1,13 +1,12 @@
+import asyncio
 import datetime
 import gzip
 import json
-
 import os
 import random
+from subprocess import Popen, PIPE
 
 import pyglet
-import asyncio
-from subprocess import Popen, PIPE
 
 from .constants import MAX_EXECUTION_TIME, REQUEST_MAX_TIME
 

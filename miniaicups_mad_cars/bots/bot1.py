@@ -1,8 +1,8 @@
-import json
-import random
 import math
+import random
+
 from ..common.strategy import Strategy
-from ..common.types import TickStep, Car
+from ..common.types import TickStep
 
 
 class Bot1Strategy(Strategy):

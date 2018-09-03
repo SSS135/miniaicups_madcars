@@ -1,14 +1,12 @@
+import argparse
+import random
+from asyncio import events
 from itertools import product
 
 import pyglet
 import pymunk.pyglet_util
-import argparse
-import random
-
-from asyncio import events
-
-from mechanic.game import Game
-from mechanic.strategy import KeyboardClient, FileClient
+from .mechanic.game import Game
+from .mechanic.strategy import KeyboardClient, FileClient
 
 window = pyglet.window.Window(1200, 800, vsync=False)
 draw_options = pymunk.pyglet_util.DrawOptions()

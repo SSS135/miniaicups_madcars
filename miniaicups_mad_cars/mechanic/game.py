@@ -1,11 +1,10 @@
 import asyncio
 import gzip
 import json
-import random
-from collections import defaultdict
-
 import math
 import os
+import random
+from collections import defaultdict
 from itertools import product
 
 import pymunkoptions

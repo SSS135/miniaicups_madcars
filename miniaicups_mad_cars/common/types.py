@@ -1,5 +1,5 @@
-from .vec2 import Vec2
 from .dict_ex import DictEx
+from .vec2 import Vec2
 
 
 class Car:
