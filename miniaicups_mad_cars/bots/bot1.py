@@ -1,9 +1,8 @@
 import json
 import random
-import numpy as np
 import math
-from miniaicups_mad_cars.common.strategy import Strategy
-from miniaicups_mad_cars.common.types import TickStep, Car
+from ..common.strategy import Strategy
+from ..common.types import TickStep, Car
 
 
 class Bot1Strategy(Strategy):

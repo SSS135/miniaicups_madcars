@@ -1,24 +1,24 @@
 from itertools import product
 import time
+import random
 
 import gym
 import gym.spaces
 import numpy as np
-from ..common.state_processor import StateProcessor
 
+from ..common.state_processor import StateProcessor
 from ..bots.bot0 import Bot0Strategy
 from ..bots.bot1 import Bot1Strategy
 from ..bots.bot2 import Bot2Strategy
 from ..bots.bot3 import Bot3Strategy
 from .inverse_client import DetachedClient, DetachedGame, BotClient, NoGraphicsGame
 from .types import NewMatchStep
-import random
 from .strategy import parse_step
 
 
 class MadCarsAIEnv(gym.Env):
-    observation_space = gym.spaces.Box(
-        low=-1, high=1, shape=(StateProcessor.state_size * StateProcessor.stacked_states,), dtype=np.float32)
+    observation_space = gym.spaces.Box(low=-1, high=1, shape=(
+        StateProcessor.state_size * len(StateProcessor.stacked_state_idx) + StateProcessor.static_state_size,), dtype=np.float32)
     action_space = gym.spaces.Discrete(3)
     strategies = [Bot0Strategy, Bot1Strategy, Bot2Strategy, Bot3Strategy]
     maps = ['PillMap', 'PillHubbleMap', 'PillHillMap', 'PillCarcassMap', 'IslandMap', 'IslandHoleMap']
@@ -88,4 +88,3 @@ class MadCarsAIEnv(gym.Env):
         assert not self.inv_game.done
         type, params = self.inv_client.message_queue.get()
         return parse_step(dict(type=type, params=params))
-
