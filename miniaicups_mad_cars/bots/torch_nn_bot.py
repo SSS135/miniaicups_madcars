@@ -9,7 +9,7 @@ from ..common.strategy import Strategy
 from ..common.types import TickStep, NewMatchStep
 
 
-class NNBotStrategy(Strategy):
+class TorchFFBotStrategy(Strategy):
     def __init__(self, model_path):
         self.rl = self._load_model(model_path)
         self.proc = None
@@ -40,7 +40,7 @@ class NNBotStrategy(Strategy):
         )
 
 
-class RNNBotStrategy(NNBotStrategy):
+class TorchRNNBotStrategy(TorchFFBotStrategy):
     def _load_model(self, path):
         return PPO_RNN(
             MadCarsAIEnv.observation_space,

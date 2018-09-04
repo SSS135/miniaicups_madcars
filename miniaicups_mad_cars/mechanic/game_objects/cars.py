@@ -1,8 +1,7 @@
 import math
-
 import pymunk
 
-from ..game_objects.base_car import Car
+from mechanic.game_objects.base_car import Car
 
 
 class Buggy(Car):
@@ -23,6 +22,7 @@ class Buggy(Car):
     button_hw = (1, 38)
 
     max_speed = 70
+    torque = 14000000
 
     drive = Car.FR
 
@@ -62,6 +62,7 @@ class Bus(Car):
     button_hw = (1, 28)
 
     max_speed = 45
+    torque = 35000000
 
     drive = Car.AWD
 

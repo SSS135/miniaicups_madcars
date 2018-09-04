@@ -45,8 +45,8 @@ class StateProcessor:
         self.frame_index += 1
         return cur_state
 
-    def _one_hot(self, n, nmax):
-        return [int(n == i) for i in range(nmax)]
+    def _one_hot(self, n, count):
+        return [int(n == i) for i in range(count)]
 
     def _get_car_state(self, c: Car):
         pos = self._norm_pos(c.pos)

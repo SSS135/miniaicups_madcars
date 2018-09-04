@@ -1,12 +1,13 @@
-import argparse
-import random
-from asyncio import events
 from itertools import product
 
 import pyglet
 import pymunk.pyglet_util
-from .mechanic.game import Game
-from .mechanic.strategy import KeyboardClient, FileClient
+import argparse
+
+from asyncio import events
+
+from mechanic.game import Game
+from mechanic.strategy import KeyboardClient, FileClient
 
 window = pyglet.window.Window(1200, 800, vsync=False)
 draw_options = pymunk.pyglet_util.DrawOptions()
@@ -27,7 +28,7 @@ parser.add_argument('--spl', type=str, nargs='?', help='Path to log for second p
 maps = ['PillMap', 'PillHubbleMap', 'PillHillMap', 'PillCarcassMap', 'IslandMap', 'IslandHoleMap']
 cars = ['Buggy', 'Bus', 'SquareWheelsBuggy']
 games = [','.join(t) for t in product(maps, cars)]
-random.shuffle(games)
+
 
 parser.add_argument('-m', '--matches', nargs='+', help='List of pairs(map, car) for games', default=games)
 

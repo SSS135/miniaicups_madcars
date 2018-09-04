@@ -1,23 +1,24 @@
 import asyncio
 import gzip
 import json
-import math
-import os
 import random
 from collections import defaultdict
+
+import math
+import os
 from itertools import product
 
 import pymunkoptions
 
-from .constants import MAX_TICK_COUNT
+from mechanic.constants import MAX_TICK_COUNT
 
 pymunkoptions.options["debug"] = False
 import pymunk
 
-from .game_objects.cars import Buggy, Bus, SquareWheelsBuggy
-from .game_objects.maps import PillMap, PillHubbleMap, PillHillMap, PillCarcassMap, IslandMap, IslandHoleMap
-from .match import Match
-from .player import Player
+from mechanic.game_objects.cars import Buggy, Bus, SquareWheelsBuggy
+from mechanic.game_objects.maps import PillMap, PillHubbleMap, PillHillMap, PillCarcassMap, IslandMap, IslandHoleMap
+from mechanic.match import Match
+from mechanic.player import Player
 
 
 class Game(object):
@@ -54,6 +55,7 @@ class Game(object):
 
         self.space = pymunk.Space()
         self.space.gravity = (0.0, -700)
+        self.space.damping = 0.85
         self.scores = defaultdict(int)
         self.matches = self.parse_games(games_list)
         self.current_match = None

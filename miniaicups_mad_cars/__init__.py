@@ -1,3 +1,10 @@
+import sys
+import os
+
+curdir = os.path.dirname(os.path.abspath(__file__))
+sys.path.insert(1, curdir)
+sys.path.insert(1, os.path.join(curdir, os.pardir))
+
 
 try:
     from gym.envs.registration import register
