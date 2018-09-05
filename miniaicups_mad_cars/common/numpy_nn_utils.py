@@ -18,8 +18,8 @@ class FFNet:
 
     def __call__(self, x):
         for i in count():
-            weight_name = f'linear.{i}.0.weight'
-            bias_name = f'linear.{i}.0.bias'
+            weight_name = str.format('linear.{}.0.weight', i)
+            bias_name = str.format('linear.{}.0.bias', i)
             if weight_name not in self.data:
                 break
             x = self.data[weight_name] @ x + self.data[bias_name]

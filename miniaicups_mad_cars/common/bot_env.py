@@ -29,7 +29,6 @@ class MadCarsAIEnv(gym.Env):
         self.inv_game: DetachedGame = None
         self.inv_client: DetachedClient = None
         self.game_info: NewMatchStep = None
-        self.bots = None
         self.proc = None
 
     def reset(self):
@@ -37,13 +36,12 @@ class MadCarsAIEnv(gym.Env):
             while not self.inv_game.done:
                 self._send_action(0)
 
-        strategy = random.choice(self.strategies)
         self.inv_client = DetachedClient()
-        self.bots = [BotClient(strategy()), self.inv_client]
-        random.shuffle(self.bots)
+        bots = [self._get_bot(), self.inv_client]
+        random.shuffle(bots)
         games = self.games.copy()
         random.shuffle(games)
-        game = NoGraphicsGame(self.bots, games, extended_save=False)
+        game = NoGraphicsGame(bots, games, extended_save=False)
         for p in game.all_players:
             p.lives = 1
         self.inv_game = DetachedGame(game)
@@ -74,6 +72,10 @@ class MadCarsAIEnv(gym.Env):
 
     def render(self, mode='human'):
         pass
+
+    def _get_bot(self):
+        strategy = random.choice(self.strategies)
+        return BotClient(strategy())
 
     def _send_action(self, action):
         assert not self.inv_game.done

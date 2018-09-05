@@ -1,23 +1,24 @@
 from functools import partial
 
+import torch
 from ppo_pytorch.models import RNNActor, FCActor
 from ppo_pytorch.ppo import PPO_RNN, PPO
 
-from ..common.gym_env import MadCarsAIEnv
+from ..common.bot_env import MadCarsAIEnv
 from ..common.state_processor import StateProcessor
 from ..common.strategy import Strategy
 from ..common.types import TickStep, NewMatchStep
 
 
-class TorchFFBotStrategy(Strategy):
+class TorchBotStrategy(Strategy):
     def __init__(self, model_path):
         self.rl = self._load_model(model_path)
         self.proc = None
         self.cur_cmd = None
-        self.memory = None
 
     def new_match(self, data: NewMatchStep):
         self.proc = StateProcessor(data)
+        self.rl.drop_collected_steps()
 
     def tick(self, step: TickStep):
         state = self.proc.update_state(step)
@@ -29,25 +30,14 @@ class TorchFFBotStrategy(Strategy):
         return {"command": self.cur_cmd, 'debug': self.cur_cmd}
 
     def _load_model(self, path):
-        return PPO(
+        model = torch.load(path)
+        alg = PPO if isinstance(model, FCActor) else PPO_RNN
+        return alg(
             MadCarsAIEnv.observation_space,
             MadCarsAIEnv.action_space,
-            model_factory=partial(FCActor),
             num_actors=1,
             disable_training=True,
-            cuda_eval=True,
-            model_init_path=path,
-        )
-
-
-class TorchRNNBotStrategy(TorchFFBotStrategy):
-    def _load_model(self, path):
-        return PPO_RNN(
-            MadCarsAIEnv.observation_space,
-            MadCarsAIEnv.action_space,
-            model_factory=partial(RNNActor, rnn_kind='qrnn', num_layers=4),
-            num_actors=1,
-            disable_training=True,
-            cuda_eval=True,
+            cuda_eval=False,
+            cuda_train=False,
             model_init_path=path,
         )

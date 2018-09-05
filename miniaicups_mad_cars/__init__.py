@@ -10,8 +10,13 @@ try:
     from gym.envs.registration import register
     register(
         id='MadCarsAI-v0',
-        entry_point='miniaicups_mad_cars.common.gym_env:MadCarsAIEnv',
-        reward_threshold=0.95,
+        entry_point='miniaicups_mad_cars.common.bot_env:MadCarsAIEnv',
+        reward_threshold=0.9,
+    )
+    register(
+        id='MadCarsNN-v0',
+        entry_point='miniaicups_mad_cars.common.nn_env:MadCarsNNEnv',
+        reward_threshold=0.9,
     )
 except:
     pass

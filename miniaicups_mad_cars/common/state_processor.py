@@ -16,7 +16,7 @@ class StateProcessor:
     deadline_std = 200
 
     def __init__(self, game_info):
-        self.game_info: NewMatchStep = game_info
+        self.game_info = game_info
         self.states = [np.zeros(self.state_size, dtype=np.float32) for _ in range(max(self.stacked_state_idx) + 1)]
         self.frame_index = 0
 
