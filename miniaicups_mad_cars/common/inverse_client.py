@@ -14,7 +14,7 @@ class DetachedClient(Client):
 
     @asyncio.coroutine
     def get_command(self):
-        cmd = self.command_queue.get()
+        cmd = self.command_queue.get(timeout=60)
         return cmd
 
     def send_message(self, t, d):

@@ -25,15 +25,15 @@ class MadCarsNNEnv(MadCarsAIEnv):
         if len(self.models) > 0:
             return BotClient(random.choice(list(self.models.values())))
         else:
-            return BotClient(Bot0Strategy())
+            return super()._get_bot()
 
     def _check_refresh_models(self):
         if self.models_refresh_time + self.new_model_check_interval > time.time():
             return
         self.models_refresh_time = time.time()
 
-        model_files = [os.path.join(self.root_folder, f) for f in os.listdir(self.root_folder)
-                       if os.path.splitext(f)[1] == '.pth' and f not in self.all_used_models]
+        model_files = [os.path.join(self.root_folder, f) for f in os.listdir(self.root_folder)]
+        model_files = [f for f in model_files if os.path.splitext(f)[1] == '.pth' and f not in self.all_used_models]
         model_files.sort(key=os.path.getctime)
         self.all_used_models.update(model_files)
         for file in model_files:

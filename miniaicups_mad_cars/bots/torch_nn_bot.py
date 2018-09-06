@@ -24,7 +24,7 @@ class TorchBotStrategy(Strategy):
         state = self.proc.update_state(step)
         if state is not None:
             action = self.rl.eval([state])
-            self.cur_cmd = MadCarsAIEnv.commands[action[0]]
+            self.cur_cmd = self.proc.get_action_name(action[0])
 
         assert self.cur_cmd is not None
         return {"command": self.cur_cmd, 'debug': self.cur_cmd}

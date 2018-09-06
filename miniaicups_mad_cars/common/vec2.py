@@ -24,6 +24,9 @@ class Vec2:
         else:
             return Vec2(self.x - other, self.y - other)
 
+    def __rsub__(self, other):
+        return Vec2(other - self.x, other - self.y)
+
     def __mul__(self, other):
         if isinstance(other, Vec2):
             return Vec2(self.x * other.x, self.y * other.y)
@@ -42,6 +45,12 @@ class Vec2:
         else:
             return Vec2(self.x // other, self.y // other)
 
+    def __rtruediv__(self, other):
+        return Vec2(other / self.x, other / self.y)
+
+    def __rfloordiv__(self, other):
+        return Vec2(other // self.x, other // self.y)
+
     def __eq__(self, other):
         if isinstance(other, Vec2):
             return self.x == other.x and self.y == other.y
@@ -56,3 +65,11 @@ class Vec2:
 
     def __iter__(self):
         return iter((self.x, self.y))
+
+    def __repr__(self):
+        return str.format('{{ x: {}, y: {} }}', self.x, self.y)
+
+    __rmul__ = __mul__
+    __radd__ = __add__
+    __str__ = __repr__
+

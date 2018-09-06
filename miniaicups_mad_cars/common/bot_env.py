@@ -1,6 +1,6 @@
 import random
 import time
-from itertools import product
+from itertools import product, count
 
 import gym.spaces
 import numpy as np
@@ -23,7 +23,6 @@ class MadCarsAIEnv(gym.Env):
     maps = ['PillMap', 'PillHubbleMap', 'PillHillMap', 'PillCarcassMap', 'IslandMap', 'IslandHoleMap']
     cars = ['Buggy', 'Bus', 'SquareWheelsBuggy']
     games = [','.join(t) for t in product(maps, cars)]
-    commands = ['left', 'right', 'stop']
 
     def __init__(self):
         self.inv_game: DetachedGame = None
@@ -52,10 +51,20 @@ class MadCarsAIEnv(gym.Env):
         return self.proc.update_state(data)
 
     def step(self, action):
+        try:
+            return self._step(action)
+        except Exception as e:
+            import traceback
+            traceback.print_exc(e)
+            return self._forced_reset()
+
+    def _step(self, action):
         assert self.inv_game is not None
         assert not self.inv_game.done
 
-        while True:
+        for iter in count():
+            if iter > 100:
+                raise RuntimeError('iter > 100')
             self._send_action(action)
             if self.inv_game.done:
                 reward = 1 if self.inv_game.winner == self.inv_client else -1
@@ -73,19 +82,28 @@ class MadCarsAIEnv(gym.Env):
     def render(self, mode='human'):
         pass
 
+    def _forced_reset(self):
+        state = self.observation_space.sample()
+        state.fill(0)
+        self.inv_game = None
+        return state, 0, True, dict(game_info=self.game_info)
+
     def _get_bot(self):
         strategy = random.choice(self.strategies)
         return BotClient(strategy())
 
     def _send_action(self, action):
         assert not self.inv_game.done
-        cmd = self.commands[action]
+        cmd = self.proc.get_action_name(action)
         out = {"command": cmd, 'debug': cmd}
         self.inv_client.command_queue.put(out)
+        wait_start_time = time.time()
         while self.inv_client.message_queue.empty() and not self.inv_game.done:
             time.sleep(0.0001)
+            if wait_start_time + 60 < time.time():
+                raise RuntimeError('wait_start_time + 60 < time.time()')
 
     def _receive_message(self):
         assert not self.inv_game.done
-        type, params = self.inv_client.message_queue.get()
+        type, params = self.inv_client.message_queue.get(timeout=60)
         return parse_step(dict(type=type, params=params))
