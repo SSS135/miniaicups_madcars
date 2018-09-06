@@ -29,6 +29,7 @@ class MadCarsAIEnv(gym.Env):
         self.inv_client: DetachedClient = None
         self.game_info: NewMatchStep = None
         self.proc = None
+        self.prev_aux_reward = 0
 
     def reset(self):
         if self.inv_game is not None:
@@ -44,6 +45,7 @@ class MadCarsAIEnv(gym.Env):
         for p in game.all_players:
             p.lives = 1
         self.inv_game = DetachedGame(game)
+        self.prev_aux_reward = 0
 
         self.game_info = self._receive_message()
         self.proc = StateProcessor(self.game_info)
@@ -74,7 +76,10 @@ class MadCarsAIEnv(gym.Env):
             data = self._receive_message()
             state = self.proc.update_state(data)
             if state is not None:
-                reward = 0
+                new_aux_reward = 0.003 * (data.my_car.pos.y - data.enemy_car.pos.y) + \
+                                 0.0006 * -abs(data.my_car.pos.x - data.enemy_car.pos.x)
+                reward = new_aux_reward - self.prev_aux_reward
+                self.prev_aux_reward = new_aux_reward
                 break
 
         return state, reward, self.inv_game.done, dict(game_info=self.game_info)
