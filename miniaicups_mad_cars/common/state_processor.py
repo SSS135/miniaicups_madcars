@@ -20,15 +20,15 @@ class StateProcessor:
         self._game_info = game_info
         self._states = [np.zeros(self.state_size, dtype=np.float32) for _ in range(max(self.stacked_state_idx) + 1)]
         self._frame_index = 0
-        self._side = 1
+        self.side = 1
 
     def get_action_name(self, index):
-        if self._side == -1:
+        if self.side == -1:
             index = 2 - index
         return self.commands[index]
 
     def update_state(self, tick: TickStep) -> np.ndarray or None:
-        self._side = tick.my_car.side
+        self.side = tick.my_car.side
         if self._frame_index % self.frameskip == 0:
             state = [
                 *self._get_car_state(tick.my_car),
@@ -59,13 +59,13 @@ class StateProcessor:
                 *self._norm_pos(c.fw_pos),
                 *self._norm_pos(c.bw_pos),
                 *self.polar_angle(c.angle),
-                math.sin(c.fw_angle / 3 * self._side),
-                math.sin(c.bw_angle / 10 * self._side))
+                math.sin(c.fw_angle / 3 * self.side),
+                math.sin(c.bw_angle / 10 * self.side))
 
     def _norm_pos(self, p):
         p = (p - self.pos_mean) / self.pos_std
-        p.x *= self._side
+        p.x *= self.side
         return p
 
     def polar_angle(self, rads):
-        return math.sin(rads * self._side), math.cos(rads * self._side)
+        return math.sin(rads * self.side), math.cos(rads * self.side)
