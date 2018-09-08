@@ -16,6 +16,7 @@ from ..bots.bot3 import Bot3Strategy
 from .strategy import Strategy
 from ..common.state_processor import StateProcessor
 from .detached_mad_cars import DetachedMadCars
+from .reward_shaper import RewardShaper
 
 
 class MadCarsAIEnv(gym.Env):
@@ -28,14 +29,15 @@ class MadCarsAIEnv(gym.Env):
     def __init__(self):
         self.game = DetachedMadCars()
         self.proc: StateProcessor = None
-        self.prev_aux_reward: float = 0
         self.internal_bot_index: int = None
         self.player_index: int = None
         self.bot: Strategy = None
         self.ticks: List[TickStep] = None
         self.state: np.ndarray = None
+        self.reward_shaper: RewardShaper = None
 
     def reset(self) -> np.ndarray:
+        self.reward_shaper = RewardShaper()
         self.ticks = self.game.reset()
         self.internal_bot_index = random.randrange(2)
         self.player_index = (self.internal_bot_index + 1) % 2
@@ -52,8 +54,8 @@ class MadCarsAIEnv(gym.Env):
             commands = [player_cmd, bot_cmd]
             if self.player_index == 1:
                 commands.reverse()
-            self.ticks, winner, done = self.game.step(commands)
-            reward = self._get_reward(winner, done)
+            self.ticks, winner_id, done = self.game.step(commands)
+            reward = self._get_reward(winner_id, done)
             if done:
                 return self.state, reward, done, {}
             new_state = self.proc.update_state(self.ticks[self.player_index])
@@ -68,18 +70,7 @@ class MadCarsAIEnv(gym.Env):
         strategy = random.choice(self.strategies)
         return strategy()
 
-    def _get_reward(self, winner: int or None, done: bool) -> float:
-        if done:
-            self.prev_aux_reward = 0
-            if winner is None:
-                return 0
-            else:
-                return 1 if winner == self.player_index else -1
-        else:
-            data = self.ticks[self.player_index]
-            new_aux_reward = 0.003 * (data.my_car.pos.y - data.enemy_car.pos.y) + \
-                             -0.002 * abs(data.my_car.pos.x - data.enemy_car.pos.x)
-            reward = new_aux_reward - self.prev_aux_reward
-            self.prev_aux_reward = new_aux_reward
-            # reward = -0.001
-            return reward
+    def _get_reward(self, winner_id: int or None, done: bool) -> float:
+        have_won = winner_id == self.player_index
+        tick = self.ticks[self.player_index]
+        return self.reward_shaper.get_reward(tick, have_won, done)

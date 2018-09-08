@@ -36,11 +36,11 @@ class DetachedMadCars:
         self.states = self._receive_states()
         return self.states
 
-    def step(self, commands: List[str]) -> (List[TickStep], int or None, bool):
+    def step(self, commands: List[str]) -> (List[TickStep], int, bool):
         assert self.inv_game is not None
         assert not self.inv_game.done
 
-        winner = None
+        winner = -1
         self._send_commands(commands)
         if self.inv_game.done:
             try:

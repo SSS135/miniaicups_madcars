@@ -15,14 +15,14 @@ class StateProcessor:
     stacked_state_idx = [0, 1, 3, 15]
     frameskip = 4
     extra_frameskip = 3
-    extra_frameskip_chance = 0.5
+    extra_frameskip_chance = 0.25
     observation_noise_scale = 0.01
     pos_mean = Vec2(600, 150)
     pos_std = Vec2(500, 400)
     deadline_std = 200
     velocity_interval = 2
     commands = ['left', 'stop', 'right']
-    num_actions = 5
+    num_actions = 3
 
     def __init__(self, game_info):
         self._game_info: NewMatchStep = game_info
@@ -37,13 +37,13 @@ class StateProcessor:
         """ (left, left-stop, stop, right-stop, right) """
         if self.side == -1:
             index = self.num_actions - 1 - index
-        if index == 1 or index == 3:
-            stop = (self._next_frame - self._frame_index) % 2 != 0
-            index = 1 if stop else (0 if index == 1 else 2)
-        elif index == 2:
-            index = 1
-        elif index == 4:
-            index = 2
+        # if index == 1 or index == 3:
+        #     stop = (self._next_frame - self._frame_index) % 2 != 0
+        #     index = 1 if stop else (0 if index == 1 else 2)
+        # elif index == 2:
+        #     index = 1
+        # elif index == 4:
+        #     index = 2
         return self.commands[index]
 
     def update_state(self, tick: TickStep) -> np.ndarray or None:

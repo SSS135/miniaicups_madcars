@@ -23,7 +23,7 @@ class MadCarsNNEnv(MadCarsAIEnv):
     def _get_bot(self):
         self._check_refresh_models()
         if len(self.models) > 0:
-            return BotClient(random.choice(list(self.models.values())))
+            return random.choice(list(self.models.values()))
         else:
             return super()._get_bot()
 
