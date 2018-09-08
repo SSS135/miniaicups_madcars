@@ -77,11 +77,10 @@ class MadCarsAIEnv(gym.Env):
             state = self.proc.update_state(data)
             if state is not None:
                 new_aux_reward = 0.003 * (data.my_car.pos.y - data.enemy_car.pos.y) + \
-                                 -0.002 * abs(data.my_car.pos.x - data.enemy_car.pos.x) + \
-                                 0.0005 * self.proc.side * (data.my_car.pos.x - StateProcessor.pos_mean.x)
+                                 -0.002 * abs(data.my_car.pos.x - data.enemy_car.pos.x)
                 reward = new_aux_reward - self.prev_aux_reward
                 self.prev_aux_reward = new_aux_reward
-                # reward = -0.00125
+                # reward = -0.001
                 break
 
         return state, reward, self.inv_game.done, dict(game_info=self.game_info)

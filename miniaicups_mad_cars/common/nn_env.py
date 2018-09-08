@@ -12,7 +12,7 @@ from .inverse_client import BotClient
 class MadCarsNNEnv(MadCarsAIEnv):
     root_folder = './pop_models'
     new_model_check_interval = 60
-    num_last_models_used = 30
+    num_last_models_used = 20
 
     def __init__(self):
         super().__init__()

@@ -1,6 +1,8 @@
 import math
 
 import numpy as np
+import numpy.random
+import random
 
 from .types import TickStep, Car, NewMatchStep
 from .vec2 import Vec2
@@ -11,6 +13,9 @@ class StateProcessor:
     static_state_size = 3 + 3 + 6
     stacked_state_idx = [0, 1, 3, 15]
     frameskip = 4
+    extra_frameskip = 3
+    extra_frameskip_chance = 0.5
+    observation_noise_scale = 0.01
     pos_mean = Vec2(600, 150)
     pos_std = Vec2(500, 400)
     deadline_std = 200
@@ -20,6 +25,7 @@ class StateProcessor:
         self._game_info = game_info
         self._states = [np.zeros(self.state_size, dtype=np.float32) for _ in range(max(self.stacked_state_idx) + 1)]
         self._frame_index = 0
+        self._next_frame = 0
         self.side = 1
 
     def get_action_name(self, index):
@@ -29,7 +35,9 @@ class StateProcessor:
 
     def update_state(self, tick: TickStep) -> np.ndarray or None:
         self.side = tick.my_car.side
-        if self._frame_index % self.frameskip == 0:
+        if self._frame_index == self._next_frame:
+            next_frameskip = self.frameskip if random.random() > self.extra_frameskip_chance else self.extra_frameskip
+            self._next_frame = self._frame_index + next_frameskip
             state = [
                 *self._get_car_state(tick.my_car),
                 *self._get_car_state(tick.enemy_car),
@@ -46,6 +54,7 @@ class StateProcessor:
             self._states.insert(0, state)
             cur_state = np.concatenate([self._states[i] for i in self.stacked_state_idx]).flatten()
             cur_state = np.concatenate((cur_state, static_state))
+            cur_state += np.random.normal(0, self.observation_noise_scale, cur_state.shape)
         else:
             cur_state = None
         self._frame_index += 1
