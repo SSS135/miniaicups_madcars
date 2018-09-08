@@ -28,7 +28,7 @@ class StateProcessor:
         self._next_frame = 0
         self.side = 1
 
-    def get_action_name(self, index):
+    def get_command(self, index) -> str:
         if self.side == -1:
             index = 2 - index
         return self.commands[index]

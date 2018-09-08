@@ -48,6 +48,8 @@ class Player(object):
             else:
                 self.debug_log.append({'tick': tick, 'message': str(e)})
             print('read exception', self.client.get_solution_id(), e)
+            import traceback
+            traceback.print_exc(e)
             self.is_disconnected = True
             self.client.close()
 

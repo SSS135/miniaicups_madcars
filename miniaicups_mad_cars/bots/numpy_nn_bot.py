@@ -17,7 +17,7 @@ class NumpyFFBotStrategy(Strategy):
         state = self.proc.update_state(step)
         if state is not None:
             action = self.net(state)
-            self.cur_cmd = self.proc.get_action_name(action)
+            self.cur_cmd = self.proc.get_command(action)
 
         assert self.cur_cmd is not None
         return {"command": self.cur_cmd, 'debug': self.cur_cmd}
