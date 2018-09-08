@@ -12,6 +12,11 @@ class Vec2:
     def magnitude(self):
         return math.sqrt(self.x * self.x + self.y * self.y)
 
+    def clamp(self, a, b):
+        ax, ay = (a.x, a.y) if isinstance(a, Vec2) else (a, a)
+        bx, by = (b.x, b.y) if isinstance(b, Vec2) else (b, b)
+        return Vec2(max(ax, min(bx, self.x)), max(ay, min(by, self.y)))
+
     def __add__(self, other):
         if isinstance(other, Vec2):
             return Vec2(self.x + other.x, self.y + other.y)

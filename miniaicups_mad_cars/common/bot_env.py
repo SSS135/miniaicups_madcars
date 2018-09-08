@@ -22,7 +22,7 @@ class MadCarsAIEnv(gym.Env):
     observation_len = StateProcessor.state_size * len(StateProcessor.stacked_state_idx) + \
                       StateProcessor.static_state_size
     observation_space = gym.spaces.Box(low=-1, high=1, shape=(observation_len,), dtype=np.float32)
-    action_space = gym.spaces.Discrete(3)
+    action_space = gym.spaces.Discrete(StateProcessor.num_actions)
     strategies = [Bot0Strategy, Bot1Strategy, Bot2Strategy, Bot3Strategy]
 
     def __init__(self):
