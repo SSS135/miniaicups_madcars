@@ -6,10 +6,10 @@ import numpy as np
 from common.reward_shaper import RewardShaper
 from ppo_pytorch.common.multiplayer_env import MultiplayerEnv
 
+from .bot_env import MadCarsAIEnv
+from .detached_mad_cars import DetachedMadCars
 from .types import NewMatchStep, TickStep
 from ..common.state_processor import StateProcessor
-from .detached_mad_cars import DetachedMadCars
-from .bot_env import MadCarsAIEnv
 
 
 class PlayerProcessor:

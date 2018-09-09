@@ -1,8 +1,8 @@
+import pickle
 from itertools import count
 
 import numpy as np
 import numpy.random as rng
-import pickle
 
 
 def softmax(x: np.ndarray) -> np.ndarray:

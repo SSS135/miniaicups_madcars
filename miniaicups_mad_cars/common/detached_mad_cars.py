@@ -1,6 +1,6 @@
 import random
 import time
-from itertools import product, count
+from itertools import product
 from typing import List
 
 from .inverse_client import DetachedClient, DetachedGame, NoGraphicsGame

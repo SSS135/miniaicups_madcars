@@ -1,23 +1,19 @@
 import random
-import time
-from itertools import product, count
 from typing import List
 
 import gym.spaces
 import numpy as np
 
-from .inverse_client import DetachedClient, DetachedGame, BotClient, NoGraphicsGame
-from .strategy import parse_step
-from .types import NewMatchStep, TickStep
+from .detached_mad_cars import DetachedMadCars
+from .reward_shaper import RewardShaper
+from .strategy import Strategy
+from .types import TickStep
 from ..bots.bot0 import Bot0Strategy
 from ..bots.bot1 import Bot1Strategy
 from ..bots.bot2 import Bot2Strategy
 from ..bots.bot3 import Bot3Strategy
 from ..bots.bot4 import Bot4Strategy
-from .strategy import Strategy
 from ..common.state_processor import StateProcessor
-from .detached_mad_cars import DetachedMadCars
-from .reward_shaper import RewardShaper
 
 
 class MadCarsAIEnv(gym.Env):

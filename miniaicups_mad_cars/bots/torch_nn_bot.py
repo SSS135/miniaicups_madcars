@@ -1,7 +1,5 @@
-from functools import partial
-
 import torch
-from ppo_pytorch.models import RNNActor, FCActor
+from ppo_pytorch.models import FCActor
 from ppo_pytorch.ppo import PPO_RNN, PPO
 
 from ..common.bot_env import MadCarsAIEnv

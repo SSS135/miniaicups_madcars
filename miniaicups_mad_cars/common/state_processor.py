@@ -1,11 +1,10 @@
 import math
+import random
 from collections import deque
 
 import numpy as np
-import numpy.random
-import random
 
-from .types import TickStep, Car, NewMatchStep
+from .types import TickStep, Car
 from .vec2 import Vec2
 
 

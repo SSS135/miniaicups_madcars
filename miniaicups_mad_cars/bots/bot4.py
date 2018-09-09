@@ -1,8 +1,7 @@
 import math
-import random
 
 from miniaicups_mad_cars.common.strategy import Strategy
-from miniaicups_mad_cars.common.types import TickStep, Car
+from miniaicups_mad_cars.common.types import TickStep
 
 
 class Bot4Strategy(Strategy):

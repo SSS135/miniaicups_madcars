@@ -1,12 +1,10 @@
+import os
 import random
 import time
 from collections import OrderedDict
-import os
 
 from .bot_env import MadCarsAIEnv
 from ..bots.torch_nn_bot import TorchBotStrategy
-from ..bots.bot0 import Bot0Strategy
-from .inverse_client import BotClient
 
 
 class MadCarsNNEnv(MadCarsAIEnv):

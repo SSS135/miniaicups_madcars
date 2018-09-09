@@ -1,7 +1,7 @@
+from ..common.numpy_nn_utils import FFNet
 from ..common.state_processor import StateProcessor
 from ..common.strategy import Strategy
 from ..common.types import TickStep, NewMatchStep
-from ..common.numpy_nn_utils import FFNet
 
 
 class NumpyFFBotStrategy(Strategy):
