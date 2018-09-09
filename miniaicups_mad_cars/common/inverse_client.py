@@ -38,6 +38,9 @@ class NoGraphicsGame(Game):
     def draw(self, draw_options):
         pass
 
+    def game_save(self):
+        pass
+
 
 class DetachedGame:
     def __init__(self, game: Game):

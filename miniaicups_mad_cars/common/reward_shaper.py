@@ -1,5 +1,4 @@
 from common.types import TickStep
-import numpy as np
 
 
 class RewardShaper:
@@ -16,7 +15,7 @@ class RewardShaper:
         if done:
             self.ended = True
             reward = 1 if have_won else -1
-            reward_info = dict(reward_info=dict(raw=reward))
+            reward_info = dict(reward_info=dict(true_reward=reward))
             return reward, reward_info
         else:
             if self.prev_tick is None:
@@ -32,14 +31,15 @@ class RewardShaper:
                 self.prev_min_dist_x = cur_dist_x
 
             r_dist_x = 0.0001 * max(0, self.prev_min_dist_x - cur_dist_x)
-            r_higher = 0.00003 * (tick.my_car.pos.y - tick.enemy_car.pos.y)
-            r_vel = 0.0000005 * self.cur_vel ** 1.5
-            r_max_y = 0.0002 * max(0, max(0, tick.my_car.pos.y) ** 1.5 - self.prev_max_y ** 1.5)
+            r_higher = 0.00005 * (tick.my_car.pos.y - tick.enemy_car.pos.y)
+            r_vel = 0.00000025 * self.cur_vel ** 1.5
+            r_max_y = 0.0001 * max(0, max(0, tick.my_car.pos.y) ** 1.5 - self.prev_max_y ** 1.5)
 
             reward = r_dist_x + r_higher + r_vel + r_max_y
 
             reward_info = dict(reward_info=dict(
-                dist_x=r_dist_x, higher=r_higher, vel=r_vel, max_y=r_max_y, reward=reward, raw=0))
+                aux_dist_x=r_dist_x, aux_higher=r_higher, aux_vel=r_vel,
+                aux_max_y=r_max_y, aux_total=reward, true_reward=0))
 
             self.prev_tick = tick
             self.prev_max_y = max(self.prev_max_y, tick.my_car.pos.y)
