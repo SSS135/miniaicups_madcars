@@ -56,13 +56,13 @@ class MadCarsAIEnv(gym.Env):
             if self.player_index == 1:
                 commands.reverse()
             self.ticks, winner_id, done = self.game.step(commands)
-            reward = self._get_reward(winner_id, done)
+            reward, reward_info = self._get_reward(winner_id, done)
             if done:
-                return self.state, reward, done, {}
+                return self.state, reward, done, reward_info
             new_state = self.proc.update_state(self.ticks[self.player_index])
             if new_state is not None:
                 self.state = new_state
-                return self.state, reward, done, {}
+                return self.state, reward, done, reward_info
 
     def render(self, mode='human'):
         pass

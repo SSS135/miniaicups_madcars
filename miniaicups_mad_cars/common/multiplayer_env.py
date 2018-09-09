@@ -24,13 +24,13 @@ class PlayerProcessor:
         random.setstate(rand_state)
         return self.proc.get_command(index)
 
-    def step(self, tick: TickStep, have_won: bool, done: bool, rand_state) -> (np.ndarray, float):
+    def step(self, tick: TickStep, have_won: bool, done: bool, rand_state) -> (np.ndarray, float, dict):
         random.setstate(rand_state)
-        reward = self.reward_shaper.get_reward(tick, have_won, done)
+        reward, reward_info = self.reward_shaper.get_reward(tick, have_won, done)
         if done:
-            return None, reward
+            return None, reward, reward_info
         state = self.proc.update_state(tick)
-        return state, reward
+        return state, reward, reward_info
 
 
 class MadCarsMultiplayerEnv(MultiplayerEnv):
@@ -47,7 +47,7 @@ class MadCarsMultiplayerEnv(MultiplayerEnv):
         ticks = self.game.reset()
         rand_state = random.getstate()
         self.processors = [PlayerProcessor(inf) for inf in self.game.game_infos]
-        self.states, _ = zip(*[p.step(t, False, False, rand_state) for (p, t) in zip(self.processors, ticks)])
+        self.states, _, _ = zip(*[p.step(t, False, False, rand_state) for (p, t) in zip(self.processors, ticks)])
         self.states = np.array(self.states)
         return self.states
 
@@ -57,13 +57,13 @@ class MadCarsMultiplayerEnv(MultiplayerEnv):
             commands = [p.get_command(a, rand_state) for (p, a) in zip(self.processors, actions)]
             ticks, winner_id, done = self.game.step(commands)
             rand_state = random.getstate()
-            new_states, rewards = zip(*[p.step(t, i == winner_id, done, rand_state)
-                                        for (i, p, t) in zip(count(), self.processors, ticks)])
+            new_states, rewards, reward_infos = zip(*[p.step(t, i == winner_id, done, rand_state)
+                                                      for (i, p, t) in zip(count(), self.processors, ticks)])
             assert sum(s is None for s in new_states) in (0, len(new_states))
             if new_states[0] is not None:
                 self.states = np.array(new_states)
             if done or new_states[0] is not None:
-                return self.states, np.array(rewards), done, [{}, {}]
+                return self.states, np.array(rewards), done, reward_infos
 
     def render(self, mode='human'):
         pass
