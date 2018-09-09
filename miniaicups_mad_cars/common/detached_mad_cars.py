@@ -6,12 +6,11 @@ from typing import List
 from .inverse_client import DetachedClient, DetachedGame, NoGraphicsGame
 from .strategy import parse_step
 from .types import NewMatchStep, TickStep
+from ..mechanic.game import Game
 
 
 class DetachedMadCars:
-    maps = ['PillMap', 'PillHubbleMap', 'PillHillMap', 'PillCarcassMap', 'IslandMap', 'IslandHoleMap']
-    cars = ['Buggy', 'Bus', 'SquareWheelsBuggy']
-    games = [','.join(t) for t in product(maps, cars)]
+    games = [','.join(t) for t in product(Game.MAPS_MAP, Game.CARS_MAP)]
 
     def __init__(self):
         self.inv_game: DetachedGame = None

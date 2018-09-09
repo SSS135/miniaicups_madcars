@@ -6,14 +6,9 @@ import argparse
 
 from asyncio import events
 
+from mechanic.constants import MATCHES_COUNT
 from mechanic.game import Game
 from mechanic.strategy import KeyboardClient, FileClient
-
-
-maps = ['PillMap', 'PillHubbleMap', 'PillHillMap', 'PillCarcassMap', 'IslandMap', 'IslandHoleMap']
-cars = ['Buggy', 'Bus', 'SquareWheelsBuggy']
-
-games = [','.join(t) for t in product(maps, cars)]
 
 
 parser = argparse.ArgumentParser(description='LocalRunner for MadCars')
@@ -25,8 +20,6 @@ parser.add_argument('--fpl', type=str, nargs='?', help='Path to log for first pl
 parser.add_argument('-s', '--sp', type=str, nargs='?',
                     help='Path to executable with strategy for second player', default='keyboard')
 parser.add_argument('--spl', type=str, nargs='?', help='Path to log for second player')
-
-parser.add_argument('-m', '--matches', nargs='+', help='List of pairs(map, car) for games', default=games)
 
 parser.add_argument('-S', '--scale', type=float, help='Window scale', default=1)
 
@@ -53,7 +46,7 @@ if args.sp == 'keyboard':
 else:
     sc = FileClient(args.sp.split(), args.spl)
 
-game = Game([fc, sc], args.matches, extended_save=False)
+game = Game([fc, sc], Game.generate_matches(MATCHES_COUNT), extended_save=False)
 
 loop = events.new_event_loop()
 events.set_event_loop(loop)

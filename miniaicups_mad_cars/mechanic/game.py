@@ -78,7 +78,7 @@ class Game(object):
 
     def end_game(self):
         self.game_complete = True
-        self.game_save()
+        # self.game_save()
 
     def get_winner(self):
         winner = sorted(self.all_players, key=lambda x: x.lives, reverse=True)
