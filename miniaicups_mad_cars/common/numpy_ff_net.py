@@ -16,6 +16,10 @@ class FFNet:
         with open(model_path, 'rb') as file:
             self.data = pickle.load(file)
 
+    @property
+    def input_size(self):
+        return self.data['linear.0.0.weight'].shape[1]
+
     def __call__(self, x):
         for i in count():
             weight_name = str.format('linear.{}.0.weight', i)

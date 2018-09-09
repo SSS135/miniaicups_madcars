@@ -96,7 +96,7 @@ def run_competition(clients: List[Tuple[str, Client, ts.Rating]], num_games: int
         c_win, c_los, n_win, n_los, r_win, r_los, i_win, i_los = \
             (c1, c2, n1, n2, r1, r2, idx[0], idx[1]) if first_won \
                 else (c2, c1, n2, n1, r2, r1, idx[1], idx[0])
-        print(f'{n_win:<32} {ts.expose(r_win):6.1f}   -- WON --   {n_los:<32} {ts.expose(r_los):6.1f}')
+        # print(f'{n_win:<32} {ts.expose(r_win):6.1f}   -- WON --   {n_los:<32} {ts.expose(r_los):6.1f}')
         r_win, r_los = ts.rate_1vs1(r_win, r_los)
         clients[i_win] = (n_win, c_win, r_win)
         clients[i_los] = (n_los, c_los, r_los)
@@ -105,6 +105,8 @@ def run_competition(clients: List[Tuple[str, Client, ts.Rating]], num_games: int
 
 def run_game(ca: Client, cb: Client) -> bool:
     game = NoGraphicsGame([ca, cb], NoGraphicsGame.generate_matches(MATCHES_COUNT))
+    # for p in game.all_players:
+    #     p.lives = 1
 
     loop = events.get_event_loop()
     while not game.game_complete:

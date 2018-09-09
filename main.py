@@ -35,7 +35,7 @@ except Exception as e:
     import json
     import traceback
     def fix_str(text):
-        repls = '.', '/', '\\', '\'', '\"', ':', ';', ',', '{', '}', '[', ']'
+        repls = '.', '/', '\\', '\'', '\"', ':', ';', ',', '{', '}', '[', ']', '\n'
         for r in repls:
             text = text.replace(r, ' ')
         return text

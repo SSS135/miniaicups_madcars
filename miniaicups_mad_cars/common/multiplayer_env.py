@@ -6,18 +6,18 @@ import numpy as np
 from common.reward_shaper import RewardShaper
 from ppo_pytorch.common.multiplayer_env import MultiplayerEnv
 
-from .bot_env import MadCarsAIEnv
+from .bot_env import get_spaces
 from .detached_mad_cars import DetachedMadCars
 from .types import NewMatchStep, TickStep
 from ..common.state_processor import StateProcessor
 
 
 class PlayerProcessor:
-    def __init__(self, game_info: NewMatchStep):
+    def __init__(self, game_info: NewMatchStep, version):
         self.proc: StateProcessor = None
         self.prev_aux_reward: float = None
         self.ticks: List[TickStep] = None
-        self.proc = StateProcessor(game_info)
+        self.proc = StateProcessor(game_info, version)
         self.reward_shaper = RewardShaper()
 
     def get_command(self, index, rand_state) -> str:
@@ -34,19 +34,18 @@ class PlayerProcessor:
 
 
 class MadCarsMultiplayerEnv(MultiplayerEnv):
-    observation_space = MadCarsAIEnv.observation_space
-    action_space = MadCarsAIEnv.action_space
-
-    def __init__(self):
+    def __init__(self, version=2):
         super().__init__(num_players=2)
+        self.version = version
         self.game = DetachedMadCars()
         self.processors: List[PlayerProcessor] = None
         self.states = None
+        self.observation_space, self.action_space = get_spaces(self.version)
 
     def reset(self) -> np.ndarray:
         ticks = self.game.reset()
         rand_state = random.getstate()
-        self.processors = [PlayerProcessor(inf) for inf in self.game.game_infos]
+        self.processors = [PlayerProcessor(inf, self.version) for inf in self.game.game_infos]
         self.states, _, _ = zip(*[p.step(t, False, False, rand_state) for (p, t) in zip(self.processors, ticks)])
         self.states = np.array(self.states)
         return self.states

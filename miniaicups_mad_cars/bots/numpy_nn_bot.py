@@ -1,17 +1,19 @@
-from ..common.numpy_nn_utils import FFNet
+from ..common.numpy_ff_net import FFNet
 from ..common.state_processor import StateProcessor
 from ..common.strategy import Strategy
 from ..common.types import TickStep, NewMatchStep
+from ..common import STATE_SIZE_V1, STATE_SIZE_V2
 
 
 class NumpyFFBotStrategy(Strategy):
     def __init__(self, model_path):
         self.net = FFNet(model_path)
+        self.version = {STATE_SIZE_V2: 2, STATE_SIZE_V1: 1}[self.net.input_size]
         self.proc = None
         self.cur_cmd = None
 
     def new_match(self, data: NewMatchStep):
-        self.proc = StateProcessor(data)
+        self.proc = StateProcessor(data, self.version)
 
     def tick(self, step: TickStep):
         state = self.proc.update_state(step)

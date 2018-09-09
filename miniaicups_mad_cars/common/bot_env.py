@@ -1,5 +1,5 @@
 import random
-from typing import List
+from typing import List, Tuple
 
 import gym.spaces
 import numpy as np
@@ -13,17 +13,21 @@ from ..bots.bot1 import Bot1Strategy
 from ..bots.bot2 import Bot2Strategy
 from ..bots.bot3 import Bot3Strategy
 from ..bots.bot4 import Bot4Strategy
-from ..common.state_processor import StateProcessor
+from ..common.state_processor import StateProcessor, get_space_sizes
+
+
+def get_spaces(version: int) -> Tuple[gym.Space, gym.Space]:
+    obs_len, act_len = get_space_sizes(version)
+    observation_space = gym.spaces.Box(low=-1, high=1, shape=(obs_len,), dtype=np.float32)
+    action_space = gym.spaces.Discrete(act_len)
+    return observation_space, action_space
 
 
 class MadCarsAIEnv(gym.Env):
-    observation_len = StateProcessor.state_size * len(StateProcessor.stacked_state_idx) + \
-                      StateProcessor.static_state_size
-    observation_space = gym.spaces.Box(low=-1, high=1, shape=(observation_len,), dtype=np.float32)
-    action_space = gym.spaces.Discrete(StateProcessor.num_actions)
     strategies = [Bot0Strategy, Bot1Strategy, Bot2Strategy, Bot3Strategy, Bot4Strategy]
 
-    def __init__(self):
+    def __init__(self, version=2):
+        self.version = version
         self.game = DetachedMadCars()
         self.proc: StateProcessor = None
         self.internal_bot_index: int = None
@@ -32,13 +36,14 @@ class MadCarsAIEnv(gym.Env):
         self.ticks: List[TickStep] = None
         self.state: np.ndarray = None
         self.reward_shaper: RewardShaper = None
+        self.observation_space, self.action_space = get_spaces(version)
 
     def reset(self) -> np.ndarray:
         self.reward_shaper = RewardShaper()
         self.ticks = self.game.reset()
         self.internal_bot_index = random.randrange(2)
         self.player_index = (self.internal_bot_index + 1) % 2
-        self.proc = StateProcessor(self.game.game_infos[self.player_index])
+        self.proc = StateProcessor(self.game.game_infos[self.player_index], self.version)
         self.bot = self._get_bot()
         self.bot.process_data(self.game.game_infos[self.internal_bot_index])
         self.state = None
