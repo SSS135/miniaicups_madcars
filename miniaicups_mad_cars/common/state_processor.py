@@ -25,13 +25,13 @@ class StateProcessor:
     num_actions = 3
 
     def __init__(self, game_info):
-        self._game_info: NewMatchStep = game_info
+        self._game_info = game_info
         states = [np.zeros(self.state_size, dtype=np.float32) for _ in range(max(self.stacked_state_idx) + 1)]
-        self._states: deque[np.ndarray] = deque(states, maxlen=len(states))
-        self._ticks: deque[TickStep] = deque(maxlen=len(states))
-        self._frame_index: int = 0
-        self._next_frame: int = 0
-        self.side: int = 1
+        self._states = deque(states, maxlen=len(states))
+        self._ticks = deque(maxlen=len(states))
+        self._frame_index = 0
+        self._next_frame = 0
+        self.side = 1
 
     def get_command(self, index) -> str:
         """ (left, left-stop, stop, right-stop, right) """

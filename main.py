@@ -20,7 +20,8 @@ try:
         from miniaicups_mad_cars.bots.bot1 import Bot1Strategy
         from miniaicups_mad_cars.bots.bot2 import Bot2Strategy
         from miniaicups_mad_cars.bots.bot3 import Bot3Strategy
-        bot = [Bot0Strategy, Bot1Strategy, Bot2Strategy, Bot3Strategy][bot_index]()
+        from miniaicups_mad_cars.bots.bot4 import Bot4Strategy
+        bot = [Bot0Strategy, Bot1Strategy, Bot2Strategy, Bot3Strategy, Bot4Strategy][bot_index]()
     elif 'np' in nn_type:
         assert nn_type == 'npfc'
         from miniaicups_mad_cars.bots.numpy_nn_bot import NumpyFFBotStrategy
@@ -33,12 +34,12 @@ try:
 except Exception as e:
     import json
     import traceback
+    def fix_str(text):
+        repls = '.', '/', '\\', '\'', '\"', ':', ';', ',', '{', '}', '[', ']'
+        for r in repls:
+            text = text.replace(r, ' ')
+        return text
     print(json.dumps(dict(command='stop', debug='exception1')))
-    print(json.dumps(dict(command='stop', debug=str(e))))
-    print(json.dumps(dict(command='stop', debug=traceback.format_exc())))
-except:
-    import json
-    import traceback
-    print(json.dumps(dict(command='stop', debug='exception2')))
-    print(json.dumps(dict(command='stop', debug=traceback.format_exc())))
+    print(json.dumps(dict(command='stop', debug=fix_str(str(e)))))
+    print(json.dumps(dict(command='stop', debug=fix_str(traceback.format_exc()))))
 

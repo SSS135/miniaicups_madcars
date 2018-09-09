@@ -13,6 +13,7 @@ from ..bots.bot0 import Bot0Strategy
 from ..bots.bot1 import Bot1Strategy
 from ..bots.bot2 import Bot2Strategy
 from ..bots.bot3 import Bot3Strategy
+from ..bots.bot4 import Bot4Strategy
 from .strategy import Strategy
 from ..common.state_processor import StateProcessor
 from .detached_mad_cars import DetachedMadCars
@@ -24,7 +25,7 @@ class MadCarsAIEnv(gym.Env):
                       StateProcessor.static_state_size
     observation_space = gym.spaces.Box(low=-1, high=1, shape=(observation_len,), dtype=np.float32)
     action_space = gym.spaces.Discrete(StateProcessor.num_actions)
-    strategies = [Bot0Strategy, Bot1Strategy, Bot2Strategy, Bot3Strategy]
+    strategies = [Bot0Strategy, Bot1Strategy, Bot2Strategy, Bot3Strategy, Bot4Strategy]
 
     def __init__(self):
         self.game = DetachedMadCars()
