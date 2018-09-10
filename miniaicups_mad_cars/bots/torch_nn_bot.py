@@ -1,9 +1,9 @@
 from typing import Tuple
 
 import torch
-from pytorch_rl_kit.models import FCActor
-from pytorch_rl_kit.ppo import PPO_RNN, PPO
-from pytorch_rl_kit.common import RLBase
+from ppo_pytorch.models import FCActor
+from ppo_pytorch.ppo import PPO_RNN, PPO
+from ppo_pytorch.common import RLBase
 
 from ..common import STATE_SIZE_V1, STATE_SIZE_V2
 from ..common.bot_env import get_spaces
