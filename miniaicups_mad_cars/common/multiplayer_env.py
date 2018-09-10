@@ -4,7 +4,7 @@ from typing import List
 
 import numpy as np
 from common.reward_shaper import RewardShaper
-from ppo_pytorch.common.multiplayer_env import MultiplayerEnv
+from rl_kit.common.multiplayer_env import MultiplayerEnv
 
 from .bot_env import get_spaces
 from .detached_mad_cars import DetachedMadCars

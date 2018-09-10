@@ -30,10 +30,10 @@ class RewardShaper:
                 self.prev_max_y = max(0, tick.my_car.pos.y)
                 self.prev_min_dist_x = cur_dist_x
 
-            r_dist_x = 0.0001 * max(0, self.prev_min_dist_x - cur_dist_x)
+            r_dist_x = 0 # 0.0001 * max(0, self.prev_min_dist_x - cur_dist_x)
             r_higher = 0 # 0.00005 * (tick.my_car.pos.y - tick.enemy_car.pos.y)
-            r_vel = 0 # 0.00000025 * self.cur_vel ** 1.5
-            r_max_y = 0 #  0.0001 * max(0, max(0, tick.my_car.pos.y) ** 1.5 - self.prev_max_y ** 1.5)
+            r_vel = 0.0000006 * self.cur_vel ** 1.5
+            r_max_y = 0.00015 * max(0, max(0, tick.my_car.pos.y) ** 1.5 - self.prev_max_y ** 1.5)
 
             reward = r_dist_x + r_higher + r_vel + r_max_y
 
