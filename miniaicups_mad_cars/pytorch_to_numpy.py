@@ -1,7 +1,7 @@
 import pickle
 import torch
 import sys
-from rl_kit.models import FCActor
+from pytorch_rl_kit.models import FCActor
 
 
 def pytorch_to_numpy(pt_path, np_path):
