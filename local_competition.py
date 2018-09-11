@@ -1,3 +1,4 @@
+import math
 import os
 from typing import List, Tuple
 import numpy as np
@@ -18,6 +19,7 @@ from asyncio import events
 from queue import Queue
 from threading import Thread
 import json
+import re
 
 
 def main():
@@ -37,6 +39,7 @@ def main():
     cache_path: str = args.cache_path
     log_interval: int = args.log_interval
 
+    ts.setup(draw_probability=0.0001)
     loop = events.new_event_loop()
     events.set_event_loop(loop)
 
@@ -52,15 +55,15 @@ def main():
         save_ratings(cache_path, clients)
         print(f'-- RATINGS {games_played} --')
         for name, rating in ratings:
-            print(f'{ts.expose(rating):6.1f}: {name:<32}')
+            print(f'{ts.expose(rating):4.1f} ({rating.mu:4.1f} +- {rating.sigma * 3:4.1f}): {name:<32}')
 
 
 def load_ratings(path: str, clients: List[Tuple[str, Client]]) -> List[Tuple[str, Client, ts.Rating]]:
     ratings = {}
-    # if os.path.exists(path):
-    #     with open(path, 'r') as f:
-    #         for name, (mu, sigma) in json.load(f).items():
-    #             ratings[name] = ts.Rating(mu, sigma)
+    if os.path.exists(path):
+        with open(path, 'r') as f:
+            for name, (mu, sigma) in json.load(f).items():
+                ratings[name] = ts.Rating(mu, sigma)
     for name, _ in clients:
         if name not in ratings:
             ratings[name] = ts.Rating()
@@ -68,10 +71,9 @@ def load_ratings(path: str, clients: List[Tuple[str, Client]]) -> List[Tuple[str
 
 
 def save_ratings(path: str, clients: List[Tuple[str, Client, ts.Rating]]):
-    # clients = {n: (r.mu, r.sigma) for (n, c, r) in clients}
-    # with open(path, 'w') as f:
-    #     json.dump(clients, f)
-    pass
+    clients = {n: (r.mu, r.sigma) for (n, c, r) in clients}
+    with open(path, 'w') as f:
+        json.dump(clients, f)
 
 
 def get_simple_bots() -> List[Tuple[str, Client]]:
@@ -94,9 +96,11 @@ def get_model_files(dir: str) -> List[str]:
 def run_competition(clients: List[Tuple[str, Client, ts.Rating]], num_games: int) -> List[Tuple[str, ts.Rating]]:
     game_id = 0
     while True:
-        idx = np.random.choice(range(len(clients)), 2, replace=False)
+        idx = get_client_pair_indexes(clients)
+
         (n1, c1, r1), (n2, c2, r2) = np.take(clients, idx, axis=0)
-        if ts.quality_1vs1(r1, r2) < 0.4:
+
+        if ts.quality_1vs1(r1, r2) < 0.2:
             continue
 
         first_won = run_game(c1, c2)
@@ -107,7 +111,7 @@ def run_competition(clients: List[Tuple[str, Client, ts.Rating]], num_games: int
         clients[i_win] = (n_win, c_win, r_win)
         clients[i_los] = (n_los, c_los, r_los)
 
-        # print(f'{n_win:<32} {ts.expose(r_win):6.1f}   -- WON --   {n_los:<32} {ts.expose(r_los):6.1f}')
+        print(f'{n_win:<32} {ts.expose(r_win):6.1f}   -- WON --   {n_los:<32} {ts.expose(r_los):6.1f}')
 
         game_id += 1
         if game_id == num_games:
@@ -115,10 +119,45 @@ def run_competition(clients: List[Tuple[str, Client, ts.Rating]], num_games: int
     return [(n, r) for (n, c, r) in clients]
 
 
+def get_client_pair_indexes(clients: List[Tuple[str, Client, ts.Rating]]) -> Tuple[int, int]:
+        clients.sort(key=lambda c: c[2].mu)
+        clients_orig = clients
+
+        choice_prob = np.array([r.sigma for (_, _, r) in clients])
+        choice_prob -= choice_prob.min() - 0.1
+        choice_prob /= choice_prob.sum()
+
+        center_idx_orig = np.random.choice(range(len(clients)), p=choice_prob)
+        client = clients[center_idx_orig]
+
+        clients = [c for c in clients if is_bot_name(c[0]) or not in_same_dir(client[0], c[0])]
+        center_idx = clients.index(client)
+
+        std = client[2].sigma * 3
+        if std < 8:
+            second_range = max(1, round(std * 2))
+            second_idx = center_idx + random.randint(1, second_range) * random.choice([-1, 1])
+        else:
+            second_idx = random.randrange(0, len(clients) - 1)
+
+        invalid_index = center_idx == second_idx or second_idx < 0 or second_idx >= len(clients)
+        if invalid_index:
+            return get_client_pair_indexes(clients)
+
+        second_idx_orig = clients_orig.index(clients[second_idx])
+        return center_idx_orig, second_idx_orig
+
+
+def is_bot_name(name: str) -> bool:
+    return name.startswith("Bot") and name.endswith("Strategy")
+
+
+def in_same_dir(a_name: str, b_name: str) -> bool:
+    return os.path.dirname(a_name) != os.path.dirname(b_name)
+
+
 def run_game(ca: Client, cb: Client) -> bool:
     game = NoGraphicsGame([ca, cb], NoGraphicsGame.generate_matches(MATCHES_COUNT))
-    # for p in game.all_players:
-    #     p.lives = 1
 
     loop = events.get_event_loop()
     while not game.game_complete:

@@ -22,7 +22,7 @@ class StateProcessor:
         self.static_state_size = 2 * (3 + 1 + {2: 8, 1: 9}[version])
         self.stacked_state_idx = [0, 1, 3, 15]
         self.frameskip = 4
-        self.extra_frameskip = 3
+        self.extra_frameskip = 4
         self.extra_frameskip_chance = 0.25
         self.observation_noise_scale = 0.01
         self.pos_mean = Vec2(600, 150)
