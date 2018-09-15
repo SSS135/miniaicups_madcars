@@ -45,7 +45,7 @@ class NoGraphicsGame(Game):
 class DetachedGame:
     def __init__(self, game: Game):
         self.game = game
-        self.thread = Thread(target=self.run_thread)
+        self.thread = Thread(target=self._run_thread)
         self.thread.start()
 
     @property
@@ -53,11 +53,12 @@ class DetachedGame:
         return self.game.game_complete
 
     @property
-    def winner(self):
+    def winner(self) -> Client:
         assert self.done
-        return self.game.get_winner().client
+        winner = self.game.get_winner()
+        return self.game.get_winner().client if winner else None
 
-    def run_thread(self):
+    def _run_thread(self):
         loop = events.new_event_loop()
         events.set_event_loop(loop)
 

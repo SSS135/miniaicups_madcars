@@ -5,7 +5,7 @@ import numpy as np
 import numpy.random as rng
 
 
-SOFTMAX_MULT = 10
+SOFTMAX_MULT = 1
 
 
 def softmax(x: np.ndarray) -> np.ndarray:

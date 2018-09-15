@@ -17,7 +17,7 @@ class Match:
         self.players = players
         self.map_objects = map(space).get_objects_for_space()
         self.cars_objects = []
-        self.deadline = DeadLine(DeadLine.ASC, 1800, 800, space)
+        self.deadline = DeadLine(DeadLine.ASC, 1800, 800)
 
         self.map_objects.append(self.deadline.get_object_for_space())
         self.dead_players = set()
@@ -48,6 +48,13 @@ class Match:
 
     @asyncio.coroutine
     def tick(self, game_tick):
+        if not self.is_rest and self.smbd_die():
+            self.rest_counter = REST_TICKS
+            self.is_rest = True
+
+        if self.rest_counter > 0:
+            self.rest_counter -= 1
+
         self.send_tick(game_tick)
         futures = []
         for p in self.players:
@@ -59,13 +66,6 @@ class Match:
             self.deadline.move()
         else:
             self.ticks_to_deadline -= 1
-
-        if not self.is_rest and self.smbd_die():
-            self.rest_counter = REST_TICKS
-            self.is_rest = True
-
-        if self.rest_counter > 0:
-            self.rest_counter -= 1
 
     def get_objects_for_space(self):
         return self.map_objects + self.cars_objects

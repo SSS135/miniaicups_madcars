@@ -111,7 +111,7 @@ def run_competition(clients: List[Tuple[str, Client, ts.Rating]], num_games: int
         clients[i_win] = (n_win, c_win, r_win)
         clients[i_los] = (n_los, c_los, r_los)
 
-        print(f'{n_win:<32} {ts.expose(r_win):6.1f}   -- WON --   {n_los:<32} {ts.expose(r_los):6.1f}')
+        # print(f'{n_win:<32} {ts.expose(r_win):6.1f}   -- WON --   {n_los:<32} {ts.expose(r_los):6.1f}')
 
         game_id += 1
         if game_id == num_games:
@@ -130,7 +130,7 @@ def get_client_pair_indexes(clients: List[Tuple[str, Client, ts.Rating]]) -> Tup
         center_idx_orig = np.random.choice(range(len(clients)), p=choice_prob)
         client = clients[center_idx_orig]
 
-        clients = [c for c in clients if is_bot_name(c[0]) or not in_same_dir(client[0], c[0])]
+        # clients = [c for c in clients if is_bot_name(c[0]) or not in_same_dir(client[0], c[0])]
         center_idx = clients.index(client)
 
         std = client[2].sigma * 3
@@ -140,8 +140,7 @@ def get_client_pair_indexes(clients: List[Tuple[str, Client, ts.Rating]]) -> Tup
         else:
             second_idx = random.randrange(0, len(clients) - 1)
 
-        invalid_index = center_idx == second_idx or second_idx < 0 or second_idx >= len(clients)
-        if invalid_index:
+        if center_idx == second_idx or second_idx < 0 or second_idx >= len(clients):
             return get_client_pair_indexes(clients)
 
         second_idx_orig = clients_orig.index(clients[second_idx])

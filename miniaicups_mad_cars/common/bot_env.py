@@ -5,7 +5,7 @@ import gym.spaces
 import numpy as np
 
 from .detached_mad_cars import DetachedMadCars
-from .reward_shaper import RewardShaper
+from .reward_shaper import RewardShaper, Winner
 from .strategy import Strategy
 from .types import TickStep
 from ..bots.bot0 import Bot0Strategy
@@ -39,11 +39,11 @@ class MadCarsAIEnv(gym.Env):
         self.observation_space, self.action_space = get_spaces(version)
 
     def reset(self) -> np.ndarray:
-        self.reward_shaper = RewardShaper()
         self.ticks = self.game.reset()
         self.internal_bot_index = random.randrange(2)
         self.player_index = (self.internal_bot_index + 1) % 2
         self.proc = StateProcessor(self.game.game_infos[self.player_index], self.version)
+        self.reward_shaper = RewardShaper(self.game.game_infos[self.player_index])
         self.bot = self._get_bot()
         self.bot.process_data(self.game.game_infos[self.internal_bot_index])
         self.state = None
@@ -72,7 +72,10 @@ class MadCarsAIEnv(gym.Env):
         strategy = random.choice(self.strategies)
         return strategy()
 
-    def _get_reward(self, winner_id: int or None, done: bool) -> float:
-        have_won = winner_id == self.player_index
+    def _get_reward(self, winner_id: int, done: bool) -> float:
+        if winner_id == -1:
+            winner = Winner.No
+        else:
+            winner = Winner.Self if winner_id == self.player_index else Winner.Enemy
         tick = self.ticks[self.player_index]
-        return self.reward_shaper.get_reward(tick, have_won, done)
+        return self.reward_shaper.get_reward(tick, winner, done)
