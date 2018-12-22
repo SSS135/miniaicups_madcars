@@ -90,7 +90,7 @@ class RewardShaper:
                 aux_max_y=0.00015 * max(0, max(0, tick.my_car.pos.y) ** 1.5 - self.prev_max_y ** 1.5),
             )
             reward_scale = self.reward_mult_by_map[self.game_info.proto_map.external_id]
-            aux_rewards = {k: v * reward_scale[k] for k, v in aux_rewards.items()}
+            aux_rewards = {k: 0 * v * reward_scale[k] for k, v in aux_rewards.items()}
             aux_sum = sum(aux_rewards.values())
 
             reward_info = dict(reward_info=dict(aux_total=aux_sum, true_reward=0, **aux_rewards))
